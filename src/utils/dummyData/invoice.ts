@@ -1,0 +1,15 @@
+export default {
+    company_profile_supplier_id:"4",
+    company_profile_anchor_id:"5",
+    scf_uploaded_document_id:"1",
+    supplier_name:"supplier",
+    anchor_name:"anchor",
+    invoice_number:"123445",
+    invoice_date:"11-11-2022",
+    po_number:"1236",
+    po_date:"11-11-2022",
+    challan_number:"145",
+    delivery_date:"12-12-2022",
+    currency:"BDT",
+    // wf_id:"wf_id",
+}

@@ -1,0 +1,107 @@
+import {useEffect, useState} from "react";
+import {Box, Grid, Typography} from "@mui/material";
+import BankMakerSupplier from "./BankMakerSupplier";
+import CustomActive from "../../importComponents/CustomActive";
+import BankMakerBuyer from "./BankMakerBuyer";
+import {useParams} from "react-router-dom";
+import {setLimitInfoFromAPI} from "../../../services/slices/limitSlice";
+import {
+  useGetAnchorLimitMutation,
+  useGetMotherLimitQuery
+} from "../../../services/api/bankApiSlice";
+import {useDispatch} from "react-redux";
+
+function BankMakerForm() {
+  const dispatch = useDispatch()
+  const [isPreview, setIsPreview] = useState(true);
+  const {companyId} = useParams()
+
+  const {data: motherLimitDetails, error: motherDetailsError} = useGetMotherLimitQuery(companyId, {
+    skip: !companyId,
+  })
+  // const [getAnchorLimit, {data: anchorLimitDetails, isLoading, error: anchorDetailsError}] = useGetAnchorLimitMutation()
+
+  useEffect(() => {
+    if (motherLimitDetails) {
+      dispatch(setLimitInfoFromAPI(motherLimitDetails))
+      // getAnchorLimit(motherLimitDetails.id)
+    }
+  }, [motherLimitDetails]);
+
+  return (
+      <Box sx={{mb: 12}}>
+        <Box sx={{width: "100%"}}>
+          <Grid
+              container
+              columns={{xs: 12, sm: 12, md: 12}}
+              rowSpacing={1}
+              sx={{mt: 4}}
+          >
+            <Grid xs={12} sm={6} md={6}>
+              <CustomActive status={isPreview} lActive={isPreview}>
+                <Typography
+                    onClick={() => setIsPreview(true)}
+                    sx={{
+                      fontSize: "25px",
+                      fontWeight: 400,
+                      lineHeight: "30px",
+                      py: 0.9,
+                      cursor: "pointer",
+                    }}
+                >
+                  Facility Definition for Supplier
+                </Typography>
+              </CustomActive>
+            </Grid>
+            <Grid xs={12} sm={6} md={6}>
+              <CustomActive status={!isPreview} lActive={isPreview}>
+                <Typography
+                    onClick={() => setIsPreview(false)}
+                    sx={{
+                      fontSize: "25px",
+                      fontWeight: 400,
+                      lineHeight: "30px",
+                      py: 0.9,
+                      cursor: "pointer",
+                    }}
+                >
+                  Facility Definition for Buyer
+                </Typography>
+              </CustomActive>
+            </Grid>
+          </Grid>
+        </Box>
+
+        {isPreview && (
+            <Box
+                sx={{
+                  pt: 5,
+                  pb: 8,
+                  borderLeft: "1px solid #256D85",
+                  borderRight: "1px solid #256D85",
+                  borderBottom: "1px solid #256D85",
+                }}
+            >
+              <Grid container columns={{xs: 6, md: 12}}>
+                <BankMakerSupplier setIsPreview={setIsPreview}/>
+              </Grid>
+            </Box>
+        )}
+        {!isPreview && (
+            <Box
+                sx={{
+                  pt: 5,
+                  pb: 8,
+                  borderLeft: "1px solid #256D85",
+                  borderRight: "1px solid #256D85",
+                  borderBottom: "1px solid #256D85",
+                }}
+            >
+              <BankMakerBuyer/>
+            </Box>
+        )}
+      </Box>
+  );
+}
+
+export default BankMakerForm;
